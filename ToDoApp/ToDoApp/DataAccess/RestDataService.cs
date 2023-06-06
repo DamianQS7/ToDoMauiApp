@@ -29,14 +29,57 @@ namespace ToDoApp.DataAccess
 			};
         }
 
-        public Task AddToDoAsync(ToDo toDo)
+        public async Task AddToDoAsync(ToDo toDo)
 		{
-			throw new NotImplementedException();
+			if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+			{
+				Debug.WriteLine("No Internet Access :(");
+				return;
+			}
+
+			try
+			{
+				string toDoJson = JsonSerializer.Serialize<ToDo>(toDo, _jsonSerializeOptions);
+				StringContent content = new StringContent(toDoJson, Encoding.UTF8, "application/json");
+
+				HttpResponseMessage response = await _httpClient.PostAsync($"{_url}/todo", content);
+
+				if (response.IsSuccessStatusCode)
+					Debug.WriteLine("ToDo Successfully created!");
+				else
+					Debug.WriteLine("Non Http 2xx Response");
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine($"Exception: {ex.Message}");
+			}
+
+			return;
 		}
 
-		public Task DeleteToDoAsync(int id)
+		public async Task DeleteToDoAsync(int id)
 		{
-			throw new NotImplementedException();
+			if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+			{
+				Debug.WriteLine("No Internet Access :(");
+				return;
+			}
+
+			try
+			{
+				HttpResponseMessage response = await _httpClient.DeleteAsync($"{_url}/todo/{id}");
+
+				if (response.IsSuccessStatusCode)
+					Debug.WriteLine("ToDo Successfully created!");
+				else
+					Debug.WriteLine("Non Http 2xx Response");
+			}
+			catch(Exception ex)
+			{
+				Debug.WriteLine($"Exception: {ex.Message}");
+			}
+
+			return;
 		}
 
 		public async Task<List<ToDo>> GetAllToDosAsync()
@@ -74,9 +117,32 @@ namespace ToDoApp.DataAccess
 			return toDos;
 		}
 
-		public Task UpdateToDoAsync(ToDo toDo)
+		public async Task UpdateToDoAsync(ToDo toDo)
 		{
-			throw new NotImplementedException();
+			if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+			{
+				Debug.WriteLine("No Internet Access :(");
+				return;
+			}
+
+			try
+			{
+				string toDoJson = JsonSerializer.Serialize<ToDo>(toDo, _jsonSerializeOptions);
+				StringContent content = new StringContent(toDoJson, Encoding.UTF8, "application/json");
+
+				HttpResponseMessage response = await _httpClient.PutAsync($"{_url}/todo/{toDo.Id}", content);
+
+				if (response.IsSuccessStatusCode)
+					Debug.WriteLine("ToDo Successfully updated!");
+				else
+					Debug.WriteLine("Non Http 2xx Response");
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine($"Exception: {ex.Message}");
+			}
+
+			return;
 		}
 	}
 }

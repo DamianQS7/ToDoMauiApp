@@ -19,19 +19,18 @@ namespace ToDoApp.DataAccess
 		public RestDataService()
         {
 			_httpClient = new HttpClient();
-			_baseAddress = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5209" : "https://localhost:7209";
+			_baseAddress = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5095" : "http://localhost:5095";
 			_url = $"{_baseAddress}/api";
 
 			_jsonSerializeOptions = new JsonSerializerOptions
 			{
 				PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-
 			};
         }
 
         public async Task AddToDoAsync(ToDo toDo)
 		{
-			if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+			if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
 			{
 				Debug.WriteLine("No Internet Access :(");
 				return;
@@ -59,7 +58,7 @@ namespace ToDoApp.DataAccess
 
 		public async Task DeleteToDoAsync(int id)
 		{
-			if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+			if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
 			{
 				Debug.WriteLine("No Internet Access :(");
 				return;
@@ -86,7 +85,7 @@ namespace ToDoApp.DataAccess
 		{
 			List<ToDo> toDos = new List<ToDo>();
 
-			if(Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+			if(Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
 			{
 				Debug.WriteLine("No Internet Access :(");
 				return toDos;
@@ -101,6 +100,7 @@ namespace ToDoApp.DataAccess
 					string responseContent = await response.Content.ReadAsStringAsync();
 
 					toDos = JsonSerializer.Deserialize<List<ToDo>>(responseContent, _jsonSerializeOptions);
+					Debug.WriteLine("Items successfully fetched");
 				}
 				else
 				{
@@ -119,7 +119,7 @@ namespace ToDoApp.DataAccess
 
 		public async Task UpdateToDoAsync(ToDo toDo)
 		{
-			if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
+			if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
 			{
 				Debug.WriteLine("No Internet Access :(");
 				return;

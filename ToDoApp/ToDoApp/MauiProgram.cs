@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using ToDoApp.DataAccess;
+using ToDoApp.Pages;
 
 namespace ToDoApp
 {
@@ -17,6 +18,8 @@ namespace ToDoApp
 				});
 
 			builder.Services.AddSingleton<IRestDataService, RestDataService>();
+			builder.Services.AddSingleton<MainPage>();
+			builder.Services.AddTransient<ManageToDoPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

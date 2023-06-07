@@ -1,9 +1,10 @@
 ﻿using Android.App;
 using Android.Runtime;
+using Microsoft.Maui.Controls.PlatformConfiguration;
 
 namespace ToDoApp
 {
-	[Application]
+	[Application(NetworkSecurityConfig = "@xml/network_security_config")]
 	public class MainApplication : MauiApplication
 	{
 		public MainApplication(IntPtr handle, JniHandleOwnership ownership)

@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using ToDoApp.DataAccess;
+using ToDoApp.Models;
+using ToDoApp.Pages;
 
 namespace ToDoApp
 {
@@ -25,11 +27,25 @@ namespace ToDoApp
 		async void OnAddToDoClicked(object sender, EventArgs e)
 		{
 			Debug.WriteLine("Add button clicked");
+
+			Dictionary<string, object> navigationParameter = new Dictionary<string, object>
+			{
+				{nameof(ToDo), new ToDo() }
+			};
+
+			await Shell.Current.GoToAsync(nameof(ManageToDoPage), navigationParameter);
 		}
 
 		async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			Debug.WriteLine("Item changed clicked");
+
+			Dictionary<string, object> navigationParameter = new Dictionary<string, object>
+			{
+				{nameof(ToDo), e.CurrentSelection.FirstOrDefault() as ToDo }
+			};
+
+			await Shell.Current.GoToAsync(nameof(ManageToDoPage), navigationParameter);
 		}
 
 	}
